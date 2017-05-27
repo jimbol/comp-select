@@ -1,31 +1,55 @@
-const SelectorCreator = require('src/selector-creator');
-const { transformerHandlers } = require('src/transformers');
+/*
+transformers
+task builders
+tasks
+selectors
+*/
+const SelectorCreator = require('./src/selector-creator');
+const { baseTransformers } = require('./src/transformers');
+const createTaskBuilders = require('./src/task-builder');
 
-const CompSelect {
-  constructor(OriginalSelectorCreator, handlersOriginal) {
-    this.handlers = handlersOriginal;
-    // TODO transformBuilders:
-    // Dynamically create transformBuilders based on transformerHandlers
-    // Then add transformBuilders to the prototype of SelectorCreator
-    this.OriginalSelectorCreator = OriginalSelectorCreator;
-    this.SelectorCreator = OriginalSelectorCreator;
+class CompSelect {
+  constructor(SelectorCreator, transformers) {
+    this.transformers = transformers;
+    this.taskBuilders = createTaskBuilders(transformers)
+    this.SelectorCreator = addMethodsToClass(SelectorCreator, this.taskBuilders);
   }
 
   composableSelector(sel){
-    return new this.SelectorCreator(sel, transformerHandlers);
+    const { transformers, createSelector } = this;
+    if (!createSelector) throw new Error(`
+      comp-select requires you to register a "createSelector" function.
+      Please register "createSelector" using "registerCreateSelector"
+      `);
+    return new this.SelectorCreator(sel, transformers, createSelector);
   }
 
-  registerTransformers(newTransformerHandlers) {
-    // Merge newTransformerHandlers with old ones
-    // Generate new transformBuilders from newTransformerHandlers
-    // Then add transformBuilders to the prototype of SelectorCreator
-    console.log('TODO: allow user to register custom transformers.');
+  registerTransformers(newTransformers) {
+    this.transformers = {
+      ...this.transformers,
+      ...newTransformers,
+    };
+
+    this.taskBuilders = createTaskBuilders(this.transformers);
+    this.SelectorCreator = addMethodsToClass(this.SelectorCreator, this.taskBuilders);
+  }
+
+  registerCreateSelector(createSelector) {
+    this.createSelector = createSelector;
   }
 }
 
-const compSelect = new CompSelect(SelectorCreator, transformerHandlers);
+const addMethodsToClass = (C, methodHash) => {
+  Object.keys(methodHash)
+    .forEach((key) => C.prototype[key] = methodHash[key]);
+  return C;
+}
+
+const compSelect = new CompSelect(SelectorCreator, baseTransformers);
 
 module.exports = {
-  composableSelector: compSelect.composableSelector.bind(compSelect),
+  CompSelect,
+  registerCreateSelector: compSelect.composableSelector.bind(compSelect),
   registerTransformers: compSelect.registerTransformers.bind(compSelect),
+  composableSelector: compSelect.composableSelector.bind(compSelect),
 };

@@ -1,36 +1,28 @@
+// SelectorCreator
+// ==================
+// The chaining methods the user sees are an on instance of SelectorCreator
 const { splitDepsLast } = require('./util');
 
+const SELECTOR = 'SELECTOR';
+const STATIC = 'STATIC';
+
 module.exports = class SelectorCreator {
-  constructor(source, helpers) {
+  constructor(source, transformers, createSelector) {
     this.source = source;
-    this.handlers = helpers;
-    this.transformers = [];
-  }
-
-  // TODO: Dynamically add methods based on passed helpers
-  filter(...args) {
-    const lastIndex = args.length - 1;
-    const { deps, last } = splitDepsLast(args);
-
-    const newTransformer = {
-      name: 'filter',
-      selectors: deps
-      resultFunc: last
-    };
-
-    this.transformers = [
-      ...this.transformers,
-      newTransformer,
-    ];
+    this.transformers = transformers;
+    this.createSelector = createSelector;
+    this.tasks = [];
   }
 
   create() {
-    return transformers.reduce((prevSelector, t) => {
-      const handler = this.handlers[t.name];
+    return tasks.reduce((prevSelector, task) => {
+      const transformer = this.transformers[task.name];
 
-      if (handler.type === SELECTOR) {
-        return createSelector(...t.selectors, prevSelector, handler.fn(t));
-      } // else if (handler.type === SELECTOR) {}
+      if (transformer.type === SELECTOR) {
+        return this.createSelector(...task.selectors, prevSelector, transformer.fn(task));
+      } else if (transformer.type === STATIC) {
+        return this.createSelector(...task.selectors, transformer.fn(task));
+      }
     }, sourceSelector);
   }
 }

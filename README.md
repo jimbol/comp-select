@@ -58,7 +58,7 @@ const getBarNamesFromFooIds = composableSelector(getSelectedFooIds)
 
 ### The old way
 ```es6
-createSelector(getSelectedFooIds, getFooHash, getBarHash,
+const getBarNamesFromFooIds = createSelector(getSelectedFooIds, getFooHash, getBarHash,
   (selectedFooIds, fooHash, barHash) => {
     const selectedFoos = selectedFooIds.map((id) => fooHash[id]);
 

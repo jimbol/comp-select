@@ -1,13 +1,14 @@
 const { splitDepsLast } = require('./util');
+const SELECTOR = 'SELECTOR';
 
-const transformerHandlers = {
+const baseTransformers = {
   filter: {
     type: SELECTOR,
-    fn: (transformer) => (args) => {
+    fn: (task) => (args) => {
       const { deps, last } = splitDepsLast(args);
-      return last.filter((item) => transformer.fn(...deps, item));
+      return last.filter((item) => task.resultFunc(...deps, item));
     }
   },
 };
 
-module.exports = { transformerHandlers };
+module.exports = { baseTransformers };
