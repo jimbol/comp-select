@@ -8,7 +8,7 @@ const SelectorCreator = require('./src/selector-creator');
 const { baseTransformers } = require('./src/transformers');
 const createTaskBuilders = require('./src/task-builder');
 
-class CompSelect {
+class CompSelectAPI {
   constructor(SelectorCreator, transformers) {
     this.transformers = transformers;
     this.taskBuilders = createTaskBuilders(transformers)
@@ -45,10 +45,10 @@ const addMethodsToClass = (C, methodHash) => {
   return C;
 }
 
-const compSelect = new CompSelect(SelectorCreator, baseTransformers);
+const compSelect = new CompSelectAPI(SelectorCreator, baseTransformers);
 
 module.exports = {
-  CompSelect,
+  CompSelectAPI,
   registerCreateSelector: compSelect.composableSelector.bind(compSelect),
   registerTransformers: compSelect.registerTransformers.bind(compSelect),
   composableSelector: compSelect.composableSelector.bind(compSelect),

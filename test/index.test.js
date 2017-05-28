@@ -1,16 +1,13 @@
 const {
-  registerCreateSelector,
-  registerTransformers,
-  composableSelector,
-  CompSelect,
+  CompSelectAPI,
 } = require('../index');
 
 const transformers = {
   filter: {
     type: 'SELECTOR',
-    fn: (transformer) => (args) => {
+    fn: (task) => (args) => {
       const { deps, last } = splitDepsLast(args);
-      return last.filter((item) => transformer.fn(...deps, item));
+      return last.filter((item) => task.resultFunc(...deps, item));
     }
   },
 };
@@ -19,14 +16,14 @@ describe('compSelect', () => {
   describe('constructor', () => {
     it('stores the SelectorCreator and standardHandlers', () => {
       class SelectorCreator {}
-      const compSelect = new CompSelect(SelectorCreator, transformers);
+      const compSelect = new CompSelectAPI(SelectorCreator, transformers);
       expect(compSelect.transformers).toBe(transformers);
       expect(compSelect.SelectorCreator).toBe(SelectorCreator);
     });
 
     it('adds transformers to the passed class', () => {
       class SelectorCreator {}
-      const compSelect = new CompSelect(SelectorCreator, transformers);
+      const compSelect = new CompSelectAPI(SelectorCreator, transformers);
 
       expect(typeof SelectorCreator.prototype.filter)
         .toEqual('function');
@@ -37,7 +34,7 @@ describe('compSelect', () => {
     let compSelect;
     class SelectorCreator {}
     beforeEach(() => {
-      compSelect = new CompSelect(SelectorCreator, transformers);
+      compSelect = new CompSelectAPI(SelectorCreator, transformers);
     });
 
     it('throws if there is no createSelector method', () => {
@@ -56,7 +53,7 @@ describe('compSelect', () => {
     class SelectorCreator {}
 
     beforeEach(() => {
-      compSelect = new CompSelect(SelectorCreator, transformers);
+      compSelect = new CompSelectAPI(SelectorCreator, transformers);
     });
 
     it('adds handlers to the SelectorCreator', () => {
@@ -80,7 +77,7 @@ describe('compSelect', () => {
 
     beforeEach(() => {
       createSelector = jest.fn();
-      compSelect = new CompSelect(SelectorCreator, transformers);
+      compSelect = new CompSelectAPI(SelectorCreator, transformers);
     });
 
     it('stores createSelector', () => {

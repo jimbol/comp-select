@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createTaskBuilders adds tasks to context when invoked 1`] = `
+Object {
+  "tasks": Array [
+    Object {
+      "name": "filter",
+      "resultFunc": "fakeResultFunc",
+      "selectors": Array [],
+    },
+    Object {
+      "name": "filter",
+      "resultFunc": "fakeResultFunc",
+      "selectors": Array [
+        "fakeSelector1",
+        "fakeSelector2",
+      ],
+    },
+    Object {
+      "name": "getEach",
+      "staticArgs": Array [
+        "fake.path",
+        "fakeFallbackValue",
+      ],
+    },
+  ],
+}
+`;
