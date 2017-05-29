@@ -213,20 +213,20 @@ const getSelectedFoosWithBarsAndBaz = composableSelector(getSelectedFoos)
 - Allow registering custom transformers
 
 ## Registering custom transformers
-```es6
-registerTransformerHandlers([{
-  type: SELECTOR,
-  name: 'filter',
-  handler: (transformer) => (args) => {
-    const lastIndex = args.length - 1;
-    const iterable = args[lastIndex];
-    const deps = args.splice(0, lastIndex);
+It is easy to add new, or custom transformers.  As transformers become universal, they may be added to the standard transformers.  Otherwise, they'll
 
-    return iterable.filter((item) =>
-      transformer.fn(...deps, item));
+```es6
+registerTransformers({
+  filter: {
+    type: SELECTOR,
+    fn: (task) => (args) => {
+      const { deps, last } = splitDepsLast(args);
+      return last.filter((item) => task.resultFunc(...deps, item));
+    }
   }
-}]);
+});
 ```
+
 ## Examples
 ### `getConversationsByThread`
 #### The new way
