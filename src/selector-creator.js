@@ -5,6 +5,7 @@ const { splitDepsLast } = require('./util');
 
 const SELECTOR = 'SELECTOR';
 const STATIC = 'STATIC';
+const POPULATE = 'POPULATE';
 
 module.exports = class SelectorCreator {
   constructor(source, transformers, createSelector) {
@@ -15,14 +16,13 @@ module.exports = class SelectorCreator {
   }
 
   create() {
-    return tasks.reduce((prevSelector, task) => {
+    return this.tasks.reduce((prevSelector, task) => {
       const transformer = this.transformers[task.name];
-
-      if (transformer.type === SELECTOR) {
+      if (transformer.type === SELECTOR || transformer.type === POPULATE) {
         return this.createSelector(...task.selectors, prevSelector, transformer.fn(task));
       } else if (transformer.type === STATIC) {
         return this.createSelector(...task.selectors, transformer.fn(task));
       }
-    }, sourceSelector);
+    }, this.source);
   }
 }

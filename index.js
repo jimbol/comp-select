@@ -17,10 +17,12 @@ class CompSelectAPI {
 
   composableSelector(sel){
     const { transformers, createSelector } = this;
+
     if (!createSelector) throw new Error(`
       comp-select requires you to register a "createSelector" function.
       Please register "createSelector" using "registerCreateSelector"
       `);
+
     return new this.SelectorCreator(sel, transformers, createSelector);
   }
 
@@ -49,7 +51,7 @@ const compSelect = new CompSelectAPI(SelectorCreator, baseTransformers);
 
 module.exports = {
   CompSelectAPI,
-  registerCreateSelector: compSelect.composableSelector.bind(compSelect),
-  registerTransformers: compSelect.registerTransformers.bind(compSelect),
-  composableSelector: compSelect.composableSelector.bind(compSelect),
+  registerCreateSelector: (...args) => compSelect.registerCreateSelector(...args),
+  registerTransformers: (...args) => compSelect.registerTransformers(...args),
+  composableSelector: (...args) => compSelect.composableSelector(...args),
 };

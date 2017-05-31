@@ -318,7 +318,7 @@ export const getMessagesByThreadSelected = createSelector(
 ```
 
 # Challenges
-- Debugging
+- Error handling / Debugging
 - Testing
 
 

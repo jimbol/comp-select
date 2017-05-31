@@ -23,6 +23,32 @@ Object {
         "fakeFallbackValue",
       ],
     },
+    Object {
+      "name": "populate",
+      "selectors": Array [
+        [Function],
+      ],
+    },
+    Object {
+      "name": "populate",
+      "paths": Array [
+        "fake.path",
+      ],
+      "selectors": Array [
+        [Function],
+      ],
+    },
+    Object {
+      "name": "populate",
+      "paths": Array [
+        "fake.path",
+      ],
+      "selectors": Array [
+        Array [
+          "fake.path",
+        ],
+      ],
+    },
   ],
 }
 `;

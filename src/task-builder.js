@@ -55,22 +55,22 @@ const createStaticTaskBuilder = (key) => function(...args) {
 }
 
 const createPopulateTaskBuilder = (key) => function(a, b) {
-  const newTasks = {
+  const task = {
     name: key,
   };
 
   const aType = typeof a;
   if (aType === 'function') {
     task.selectors = [a];
+  } else if (aType === 'object') {
+    task.paths = Object.keys(a);
+    task.selectors = task.paths.map((key) => [key]);
   } else if (aType === 'string') {
     task.paths = [a];
     task.selectors = [b];
-  } else if (aType === 'object') {
-    task.paths = Object.keys(a);
-    task.selectors = Object.values(a);
   }
 
-  this.tasks = [...this.tasks, newTasks];
+  this.tasks = [...this.tasks, task];
 
   return this;
 }
