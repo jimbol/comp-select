@@ -8,6 +8,7 @@ const baseTransformers = {
     type: SELECTOR,
     fn: (task) => (...args) => {
       const { deps, last } = splitDepsLast(args);
+
       return last.filter((item) => task.resultFunc(...deps, item));
     }
   },
@@ -29,7 +30,9 @@ const baseTransformers = {
       }
 
       return last.map((item) => {
+
         paths.forEach((path, i) => {
+
           const ids = get(item, path, []);
           const dep = deps[i];
 
@@ -38,6 +41,7 @@ const baseTransformers = {
           }
 
           item.set(item, path, ids.map((id) => dep[id]));
+
         });
 
         return item;

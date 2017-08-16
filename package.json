@@ -11,7 +11,7 @@
     "reselect": "^3.0.1"
   },
   "scripts": {
-    "jest": "jest",
-    "jest-watch": "jest --watch"
+    "test": "jest",
+    "test-watch": "jest --watch"
   }
 }

@@ -5,22 +5,21 @@ Object {
   "tasks": Array [
     Object {
       "name": "filter",
-      "resultFunc": "fakeResultFunc",
+      "resultFunc": [Function],
       "selectors": Array [],
     },
     Object {
       "name": "filter",
-      "resultFunc": "fakeResultFunc",
+      "resultFunc": [Function],
       "selectors": Array [
-        "fakeSelector1",
-        "fakeSelector2",
+        [Function],
+        [Function],
       ],
     },
     Object {
       "name": "getEach",
       "staticArgs": Array [
         "fake.path",
-        "fakeFallbackValue",
       ],
     },
     Object {
@@ -44,9 +43,7 @@ Object {
         "fake.path",
       ],
       "selectors": Array [
-        Array [
-          "fake.path",
-        ],
+        [Function],
       ],
     },
   ],

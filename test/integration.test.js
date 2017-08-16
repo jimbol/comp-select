@@ -20,12 +20,23 @@ describe('integration', () => {
       .filter((foo = {}) => foo.id === 2)
       .create();
 
-    console.log(sel({
+    expect(sel({
       selectedFooIds: [1, 2],
       fooHash: {
         1: { id: 1 },
         2: { id: 2 },
       }
-    }));
+    })).toEqual([{ id: 2 }]);
+  });
+
+  describe('selector task builders', () => {
+    it('throws when array not passed', () => {
+      const sel =
+
+      expect(() =>
+        composableSelector(getSelectedFooIds)
+          .filter('not a function')
+      ).toThrow(new Error('Expected type of "function".  Instead got "string".'));
+    });
   });
 });

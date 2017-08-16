@@ -1,4 +1,5 @@
 const { splitDepsLast } = require('./util');
+const { validateFunctions } = require('./validate');
 const { SELECTOR, STATIC, POPULATE } = require('./constants');
 
 // Task Builders
@@ -9,6 +10,8 @@ const { SELECTOR, STATIC, POPULATE } = require('./constants');
 //
 // They are generated from available transformers
 
+// `createTaskBuilders` takes a hash of transformers
+// and returns a list of "task builder" function for each
 module.exports = function createTaskBuilders(transformers = {}) {
   return Object
     .keys(transformers)
@@ -30,7 +33,7 @@ const createBuilder = (builders, key, transformers) => {
 };
 
 const createSelectorTaskBuilder = (key) => function(...args) {
-  const { deps, last } = splitDepsLast(args);
+  const { deps, last } = splitDepsLast(validateFunctions(args));
 
   const newTasks = {
     name: key,
@@ -60,14 +63,20 @@ const createPopulateTaskBuilder = (key) => function(a, b) {
   };
 
   const aType = typeof a;
+
   if (aType === 'function') {
-    task.selectors = [a];
+    task.selectors = validateFunctions([a]);
+
   } else if (aType === 'object') {
     task.paths = Object.keys(a);
-    task.selectors = task.paths.map((key) => [key]);
+    task.selectors = validateFunctions(
+      task.paths.map((key) => a[key])
+    );
+
   } else if (aType === 'string') {
     task.paths = [a];
-    task.selectors = [b];
+    task.selectors = validateFunctions([b]);
+
   }
 
   this.tasks = [...this.tasks, task];
