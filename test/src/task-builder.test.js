@@ -30,9 +30,12 @@ describe('createTaskBuilders', () => {
     function fake(){}
 
     const fakeSelector = jest.fn();
-    results.filter.apply(context, ['fakeResultFunc']);
-    results.filter.apply(context, ['fakeSelector1', 'fakeSelector2', 'fakeResultFunc']);
-    results.getEach.apply(context, ['fake.path', 'fakeFallbackValue']);
+    const fakeSelector1 = jest.fn();
+    const fakeSelector2 = jest.fn();
+    const fakeResultFunc = jest.fn();
+    results.filter.apply(context, [fakeResultFunc]);
+    results.filter.apply(context, [fakeSelector1, fakeSelector2, fakeResultFunc]);
+    results.getEach.apply(context, ['fake.path']);
     results.populate.apply(context, [fake]);
     results.populate.apply(context, ['fake.path', fake]);
     results.populate.apply(context, [{ 'fake.path': fake }]);
