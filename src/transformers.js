@@ -12,6 +12,20 @@ const baseTransformers = {
       return last.filter((item) => task.resultFunc(...deps, item));
     }
   },
+
+  selector: {
+    type: SELECTOR,
+    fn: (task) => task.resultFunc,
+  },
+
+  get: {
+    type: STATIC,
+    fn: (task) => (prevResult) => {
+      const [path, fallback] = task.staticArgs;
+      return get(prevResult, path, fallback);
+    }
+  },
+
   getEach: {
     type: STATIC,
     fn: (task) => (prevResult) => {
@@ -19,6 +33,41 @@ const baseTransformers = {
       return prevResult.map((item) => get(item, path, fallback));
     }
   },
+
+  slice: {
+    type: STATIC,
+    fn: (task) => (prevResult) => {
+      const [index, length] = task.staticArgs;
+      return prevResult.slice(index, length);
+    }
+  },
+
+  flatten: {
+    type: STATIC,
+    fn: (task) => (prevResult) => {
+      const [path] = task.staticArgs;
+      return prevResult.reduce((acc, item) => {
+        return [
+          ...acc,
+          ...get(item, path, []),
+        ];
+      }, []);
+    }
+  },
+
+  keys: {
+    type: STATIC,
+    fn: (task) => (prevResult) => {
+      const [path] = task.staticArgs;
+      return prevResult.reduce((acc, item) => {
+        return [
+          ...acc,
+          ...get(item, path, []),
+        ];
+      });
+    }
+  },
+
   populate: {
     type: POPULATE,
     fn: (task) => (...args) => {

@@ -17,11 +17,14 @@ module.exports = class SelectorCreator {
 
   create() {
     return this.tasks.reduce((prevSelector, task) => {
+
       const transformer = this.transformers[task.name];
+
       if (transformer.type === SELECTOR || transformer.type === POPULATE) {
         return this.createSelector(...task.selectors, prevSelector, transformer.fn(task));
+
       } else if (transformer.type === STATIC) {
-        return this.createSelector(...task.selectors, transformer.fn(task));
+        return this.createSelector(prevSelector, transformer.fn(task));
       }
     }, this.source);
   }
