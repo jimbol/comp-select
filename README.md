@@ -208,6 +208,30 @@ const getSelectedFoosWithBarsAndBaz = composableSelector(getSelectedFoos)
 ```
 
 
+## Testing
+```es6
+const sel = composableSelector(getSelectedFooIds)
+  .populate(getFooHash)
+  .filter(getBaz, (baz, foo = {}) => foo.id === baz.fooId)
+  .getEach('name')
+  .create();
+```
+
+```es6
+it('gets the names for each selected foo on baz', () => {
+  const obj = { name: 'Jam' };
+
+  sel.test([1])
+    .populate({ 1: obj })
+    .filter({
+      fooId: 1,
+    })
+    // Skips over static transformers
+    .returns(['Jam']);
+});
+```
+
+
 ## More?
 - What other transformers are useful?
 - Allow registering custom transformers
