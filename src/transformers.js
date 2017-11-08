@@ -78,7 +78,9 @@ const baseTransformers = {
         return last.map((id) => deps[0][id])
       }
 
-      return last.map((item) => {
+      const isArray = Array.isArray(last);
+      const lastAsArr = (isArray) ? last : [last];
+      const result = lastAsArr.map((item) => {
 
         paths.forEach((path, i) => {
 
@@ -86,15 +88,19 @@ const baseTransformers = {
           const dep = deps[i];
 
           if (typeof ids === 'string') {
-            return item.set(item, path, dep[ids]);
+            return set(item, path, dep[ids]);
           }
 
-          item.set(item, path, ids.map((id) => dep[id]));
-
+          set(item, path, ids
+            .map((id) => dep[id])
+            .filter(Boolean)
+          );
         });
 
         return item;
       });
+
+      return (isArray) ? result : last;
     }
   },
 };

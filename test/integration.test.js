@@ -1,7 +1,6 @@
 const { createSelector } = require('reselect');
 const {
   registerCreateSelector,
-  registerTransformers,
   composableSelector,
 } = require('../index');
 
