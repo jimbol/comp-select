@@ -1,3 +1,5 @@
+This library is not being maintained but feel free to play with it.
+
 # Comp-Select: Composable Reselect
 A [re-select](https://github.com/reactjs/reselect) enhancer designed to work along-side your existing selectors. It allows document linking and composable transformations written in a declarative manner giving you part of the power of an ORM without all the work.
 
