@@ -16,16 +16,47 @@ module.exports = class SelectorCreator {
   }
 
   create() {
-    return this.tasks.reduce((prevSelector, task) => {
+    const finalSelector = this.tasks.reduce((prevSelector, task) => {
 
       const transformer = this.transformers[task.name];
-
+      let selector;
       if (transformer.type === SELECTOR || transformer.type === POPULATE) {
-        return this.createSelector(...task.selectors, prevSelector, transformer.fn(task));
+        selector = this.createSelector(
+          ...task.selectors,
+          prevSelector,
+          transformer.fn(task)
+        );
 
       } else if (transformer.type === STATIC) {
-        return this.createSelector(prevSelector, transformer.fn(task));
+        selector = this.createSelector(
+          prevSelector,
+          transformer.fn(task),
+        );
       }
+
+      return selector;
     }, this.source);
+
+    return decorateSelector(
+      finalSelector,
+      this.source,
+      this.tasks,
+    );
   }
+}
+
+
+function decorateSelector(
+  selector,
+  source,
+  tasks,
+) {
+  function metaSelector(...args) {
+    return selector(...args);
+  }
+
+  metaSelector.source = source;
+  metaSelector.tasks = tasks;
+
+  return metaSelector;
 }

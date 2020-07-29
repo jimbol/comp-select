@@ -51,6 +51,7 @@ const compSelect = new CompSelectAPI(SelectorCreator, baseTransformers);
 
 module.exports = {
   CompSelectAPI,
+  compSelect,
   registerCreateSelector: (...args) => compSelect.registerCreateSelector(...args),
   registerTransformers: (...args) => compSelect.registerTransformers(...args),
   composableSelector: (...args) => compSelect.composableSelector(...args),

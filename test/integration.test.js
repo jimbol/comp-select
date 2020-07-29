@@ -13,11 +13,14 @@ registerCreateSelector(createSelector);
 
 describe('integration', () => {
 
-  it('works together', () => {
+  it.only('works together', () => {
     const sel = composableSelector(getSelectedFooIds)
       .populate(getFooHash)
       .filter((foo = {}) => foo.id === 2)
       .create();
+
+    console.log(sel.source);
+    console.log(sel.tasks);
 
     expect(sel({
       selectedFooIds: [1, 2],
